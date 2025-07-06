@@ -29,7 +29,7 @@ class ChatBox:
             self.base_llm,
             quantization_config=bnb_config,
             trust_remote_code=True
-        )
+        ).to("cuda")
         self.model.config.use_cache =False
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.base_llm)
@@ -63,7 +63,7 @@ class ChatBox:
                      "Question" : {query}
                      "Answer" :  """
 
-        inputs = self.tokenizer([sys_prompt],return_tensors='pt',padding=True).to(self.model.device)
+        inputs = self.tokenizer([sys_prompt],return_tensors='pt',padding=True).to("cuda")
         output = self.model.generate(
             **inputs,
             max_new_tokens = 256,
@@ -73,7 +73,7 @@ class ChatBox:
             eos_token_id = self.tokenizer.eos_token_id
         )
 
-        output_d = self.tokenizer.batch_decode(output[0],skip_special_tokens = True)
+        output_d = self.tokenizer.decode(output[0],skip_special_tokens = True)
         answer = output_d.split('Answer')[-1].strip()
         return answer
 

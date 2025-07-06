@@ -8,8 +8,10 @@ from Data_Scrapping.scrapping import Scrapper
 from utils.utils import get_data
 from embedding.embedding import embeds
 
+chatbox = ChatBox()
+
+
 def response(query):
-    chatbox = ChatBox()
     return chatbox.question_answer(query)
 
 def main():
@@ -25,13 +27,13 @@ def main():
     iface = gr.Interface(
         fn = response,
         inputs = gr.Textbox(lines = 2, placeholder = "Fire away the question!!!"),
-        outputs = "texts",
+        outputs = "text",
         title="ATLA Q BOT",
         description="Ask anything about ATLA show"
 
     )
+    iface.launch(share=True)
 
-    iface.launch()
 
 
 

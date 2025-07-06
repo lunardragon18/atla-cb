@@ -1,6 +1,7 @@
 from sentence_transformers import SentenceTransformer
 import faiss
 import pickle
+import numpy as np
 
 class embeds:
     def __init__(self,saved = False):
@@ -19,12 +20,12 @@ class embeds:
         model = SentenceTransformer("all-MiniLM-L6-v2")
         data = [item['text'] for item in chunks]
 
-        embeddings = model.encode(data, convert_to_tensor=True)
+        embeddings = model.encode(data, convert_to_numpy=True)
 
         dim = embeddings.shape[1]
 
         indexing = faiss.IndexFlatL2(dim)
-        indexing.add(embeddings.numpy())
+        indexing.add(np.array(embeddings))
 
         faiss.write_index(indexing , "avatar_index.faiss")
         return indexing, chunks
